@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#
+# 2016-05-04
+# Author: Mizuki Urushida
+#
+
+usage_exit() {
+	echo "Usage: $0 [-m] [-v] [LOCATION]" 1>&2
+	exit 1
+}
+
+WEATHER_URL="wttr.in"
+LOCATION="Koganeishi"
+CURRENT_PART_LINE=7
+
+while getopts "mv" OPT
+do
+	case $OPT in
+		m)	# Moon Option
+			FLAG_M=0
+			;;
+		v)  # Display detail
+			FLAG_V=0
+			;;
+		\?) usage_exit
+			;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if [ ! -z $FLAG_M ]; then
+	curl -s --ipv4 ${WEATHER_URL}/Moon
+	exit 0
+fi
+
+if [ ! -z $1 ]; then
+	LOCATION=$1
+fi
+
+if [ ! -z $FLAG_V ]; then
+	curl -s --ipv4 ${WEATHER_URL}/${LOCATION}
+else
+	curl -s --ipv4 ${WEATHER_URL}/${LOCATION} | head -n ${CURRENT_PART_LINE}
+fi

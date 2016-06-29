@@ -20,10 +20,10 @@ do
 		m)	# Moon Option
 			FLAG_M=0
 			;;
-		v)  # Display detail
+		v)	# Display detail
 			FLAG_V=0
 			;;
-		\?) usage_exit
+		\?)	usage_exit
 			;;
 	esac
 done

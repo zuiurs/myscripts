@@ -13,6 +13,9 @@
 #    `--build
 #       `--bin
 
+# TODO: update library
+# TODO: verbose option (hide compile information)
+
 dependency_check() {
 	DEPENDENCY=(autoconf automake bzip2 cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel)
 
@@ -139,7 +142,6 @@ install_ffmpeg() {
 	PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --extra-cflags="-I${INSTALL_DIR}/build/include" --extra-ldflags="-L${INSTALL_DIR}/build/lib -ldl" --bindir="${INSTALL_DIR}/build/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
 	make
 	make install
-	hash -r
 }
 
 if [ $# -gt 1 ]; then
@@ -183,4 +185,5 @@ install_libvorbis
 install_libvpx
 install_ffmpeg
 
-
+echo "Installation complete!"
+echo "You have to set ${INSTALL_DIR}/build/bin to \$PATH to use."

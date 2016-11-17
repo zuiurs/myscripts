@@ -58,7 +58,7 @@ install_yasm() {
 
 	echo "---> Cloning yasm.git..."
 	if [[ -z ${FLAG_V} ]]; then
-		git clone --depth 1 git://github.com/yasm/yasm.git > /dev/null
+		git clone --depth 1 git://github.com/yasm/yasm.git > /dev/null 2>&1
 	else 
 		git clone --depth 1 git://github.com/yasm/yasm.git
 	fi
@@ -67,28 +67,28 @@ install_yasm() {
 
 	echo "---> Updating configuration file..."
 	if [[ -z ${FLAG_V} ]]; then
-		autoreconf -fiv > /dev/null
+		autoreconf -fiv > /dev/null 2>&1
 	else 
 		autoreconf -fiv
 	fi
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" > /dev/null
+		./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" > /dev/null 2>&1
 	else 
 		./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin"
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -103,7 +103,7 @@ install_libx264() {
 
 	echo "---> Cloning libx264..."
 	if [[ -z ${FLAG_V} ]]; then
-		git clone --depth 1 git://git.videolan.org/x264 > /dev/null
+		git clone --depth 1 git://git.videolan.org/x264 > /dev/null 2>&1
 	else 
 		git clone --depth 1 git://git.videolan.org/x264
 	fi
@@ -112,21 +112,21 @@ install_libx264() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" --enable-static > /dev/null
+		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" --enable-static > /dev/null 2>&1
 	else 
 		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" --enable-static
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -141,7 +141,7 @@ install_libx265() {
 
 	echo "---> Cloning libx265..."
 	if [[ -z ${FLAG_V} ]]; then
-		hg clone https://bitbucket.org/multicoreware/x265 > /dev/null
+		hg clone https://bitbucket.org/multicoreware/x265 > /dev/null 2>&1
 	else 
 		hg clone https://bitbucket.org/multicoreware/x265
 	fi
@@ -150,21 +150,21 @@ install_libx265() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}/build" -DENABLE_SHARED:bool=off ${INSTALL_DIR}/source/x265/source > /dev/null
+		cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}/build" -DENABLE_SHARED:bool=off ${INSTALL_DIR}/source/x265/source > /dev/null 2>&1
 	else 
 		cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}/build" -DENABLE_SHARED:bool=off ${INSTALL_DIR}/source/x265/source
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -179,7 +179,7 @@ install_libfdk_aac() {
 
 	echo "---> Cloning libfdk_aac..."
 	if [[ -z ${FLAG_V} ]]; then
-		git clone --depth 1 git://git.code.sf.net/p/opencore-amr/fdk-aac > /dev/null
+		git clone --depth 1 git://git.code.sf.net/p/opencore-amr/fdk-aac > /dev/null 2>&1
 	else 
 		git clone --depth 1 git://git.code.sf.net/p/opencore-amr/fdk-aac
 	fi
@@ -188,28 +188,28 @@ install_libfdk_aac() {
 
 	echo "---> Updating configuration file..."
 	if [[ -z ${FLAG_V} ]]; then
-		autoreconf -fiv > /dev/null
+		autoreconf -fiv > /dev/null 2>&1
 	else 
 		autoreconf -fiv
 	fi
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		./configure --prefix="${INSTALL_DIR}/build" --disable-shared > /dev/null
+		./configure --prefix="${INSTALL_DIR}/build" --disable-shared > /dev/null 2>&1
 	else 
 		./configure --prefix="${INSTALL_DIR}/build" --disable-shared
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -224,8 +224,8 @@ install_libmp3lame() {
 
 	echo "---> Cloning libmp3lame..."
 	if [[ -z ${FLAG_V} ]]; then
-		curl -L -O http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz > /dev/null
-		tar xzvf lame-3.99.5.tar.gz > /dev/null
+		curl -L -O http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz > /dev/null 2>&1
+		tar xzvf lame-3.99.5.tar.gz > /dev/null 2>&1
 	else 
 		curl -L -O http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz
 		tar xzvf lame-3.99.5.tar.gz
@@ -235,21 +235,21 @@ install_libmp3lame() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" --disable-shared --enable-nasm > /dev/null
+		./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" --disable-shared --enable-nasm > /dev/null 2>&1
 	else 
 		./configure --prefix="${INSTALL_DIR}/build" --bindir="${INSTALL_DIR}/build/bin" --disable-shared --enable-nasm
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -258,13 +258,13 @@ install_libmp3lame() {
 }
 
 install_libopus() {
-	echo "--->  > Opus Audio Decoder and Encoder Setup"
+	echo "---> Opus Audio Decoder and Encoder Setup"
 
 	cd "${INSTALL_DIR}/source"
 
 	echo "---> Cloning libopus..."
 	if [[ -z ${FLAG_V} ]]; then
-		git clone http://git.opus-codec.org/opus.git > /dev/null
+		git clone http://git.opus-codec.org/opus.git > /dev/null 2>&1
 	else 
 		git clone http://git.opus-codec.org/opus.git
 	fi
@@ -273,28 +273,28 @@ install_libopus() {
 
 	echo "---> Updating configuration file..."
 	if [[ -z ${FLAG_V} ]]; then
-		autoreconf -fiv > /dev/null
+		autoreconf -fiv > /dev/null 2>&1
 	else 
 		autoreconf -fiv
 	fi
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --disable-shared > /dev/null
+		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --disable-shared > /dev/null 2>&1
 	else 
 		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --disable-shared
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -309,8 +309,8 @@ install_libogg() {
 
 	echo "---> Cloning libogg..."
 	if [[ -z ${FLAG_V} ]]; then
-		curl -O http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz > /dev/null
-		tar xzvf libogg-1.3.2.tar.gz > /dev/null
+		curl -O http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz > /dev/null 2>&1
+		tar xzvf libogg-1.3.2.tar.gz > /dev/null 2>&1
 	else 
 		curl -O http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz
 		tar xzvf libogg-1.3.2.tar.gz
@@ -320,21 +320,21 @@ install_libogg() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		./configure --prefix="${INSTALL_DIR}/build" --disable-shared > /dev/null
+		./configure --prefix="${INSTALL_DIR}/build" --disable-shared > /dev/null 2>&1
 	else 
 		./configure --prefix="${INSTALL_DIR}/build" --disable-shared
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -349,8 +349,8 @@ install_libvorbis() {
 
 	echo "---> Cloning libvorbis..."
 	if [[ -z ${FLAG_V} ]]; then
-		curl -O http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz > /dev/null
-		tar xzvf libvorbis-1.3.4.tar.gz > /dev/null
+		curl -O http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz > /dev/null 2>&1
+		tar xzvf libvorbis-1.3.4.tar.gz > /dev/null 2>&1
 	else 
 		curl -O http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz
 		tar xzvf libvorbis-1.3.4.tar.gz
@@ -360,21 +360,21 @@ install_libvorbis() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		./configure --prefix="${INSTALL_DIR}/build" --with-ogg="${INSTALL_DIR}/build" --disable-shared > /dev/null
+		./configure --prefix="${INSTALL_DIR}/build" --with-ogg="${INSTALL_DIR}/build" --disable-shared > /dev/null 2>&1
 	else 
 		./configure --prefix="${INSTALL_DIR}/build" --with-ogg="${INSTALL_DIR}/build" --disable-shared
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -389,7 +389,7 @@ install_libvpx() {
 
 	echo "---> Cloning libvpx..."
 	if [[ -z ${FLAG_V} ]]; then
-		git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git > /dev/null
+		git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git > /dev/null 2>&1
 	else 
 		git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git
 	fi
@@ -398,21 +398,21 @@ install_libvpx() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		./configure --prefix="${INSTALL_DIR}/build" --disable-examples > /dev/null
+		./configure --prefix="${INSTALL_DIR}/build" --disable-examples > /dev/null 2>&1
 	else 
 		./configure --prefix="${INSTALL_DIR}/build" --disable-examples
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi
@@ -427,8 +427,8 @@ install_ffmpeg() {
 
 	echo "---> Cloning ffmpeg..."
 	if [[ -z ${FLAG_V} ]]; then
-		curl -O http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 > /dev/null
-		tar xjvf ffmpeg-snapshot.tar.bz2 > /dev/null
+		curl -O http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 > /dev/null 2>&1
+		tar xjvf ffmpeg-snapshot.tar.bz2 > /dev/null 2>&1
 	else 
 		curl -O http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
 		tar xjvf ffmpeg-snapshot.tar.bz2
@@ -438,21 +438,21 @@ install_ffmpeg() {
 
 	echo "---> Generating Makefile..."
 	if [[ -z ${FLAG_V} ]]; then
-		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --extra-cflags="-I${INSTALL_DIR}/build/include" --extra-ldflags="-L${INSTALL_DIR}/build/lib -ldl" --bindir="${INSTALL_DIR}/build/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 > /dev/null
+		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --extra-cflags="-I${INSTALL_DIR}/build/include" --extra-ldflags="-L${INSTALL_DIR}/build/lib -ldl" --bindir="${INSTALL_DIR}/build/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 > /dev/null 2>&1
 	else 
 		PKG_CONFIG_PATH="${INSTALL_DIR}/build/lib/pkgconfig" ./configure --prefix="${INSTALL_DIR}/build" --extra-cflags="-I${INSTALL_DIR}/build/include" --extra-ldflags="-L${INSTALL_DIR}/build/lib -ldl" --bindir="${INSTALL_DIR}/build/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
 	fi
 
 	echo "---> Compiling..."
 	if [[ -z ${FLAG_V} ]]; then
-		make > /dev/null
+		make > /dev/null 2>&1
 	else 
 		make
 	fi
 
 	echo "---> Installing..."
 	if [[ -z ${FLAG_V} ]]; then
-		make install > /dev/null
+		make install > /dev/null 2>&1
 	else 
 		make install
 	fi

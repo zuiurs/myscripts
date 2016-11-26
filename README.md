@@ -24,7 +24,7 @@ export PATH=$PATH:~/myscripts/bin
 - [ffmpeg_installer](#ffmpeg_installer)
 - [wttr](#wttr)
 
-## docker-container-clean.sh
+## docker-container-clean
 
 Output commands for removing all containers.  
 **This command does nothing.**  
@@ -44,7 +44,7 @@ f0f3b0bc44f8        docker.io/centos:7     "/bin/bash"         3 minutes ago    
 docker rm -f devel03 devel02 devel01 test02 test01
 ```
 
-## docker-image-clean.sh
+## docker-image-clean
 
 Output commands for removing designated images.  
 **This command does nothing usually.**  
@@ -89,7 +89,7 @@ Deleting images...
 Complete!
 ```
 
-## ffmpeg_installer.sh
+## ffmpeg_installer
 
 Install ffmpeg for CentOS 7.  
 This is based on official procedure below.  

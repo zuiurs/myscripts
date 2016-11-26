@@ -68,7 +68,9 @@ else
 		echo -n "Are you sure? [y/n]: "
 		read confirm2
 		if [ ${confirm2} = "y" ]; then
-			echo docker rmi ${SERIALIZED_IMG}
+			echo "Deleting images..."
+			docker rmi ${SERIALIZED_IMG}
+			echo "Complete!"
 		fi
 	fi
 fi

@@ -19,9 +19,9 @@ export PATH=$PATH:~/myscripts/bin
 
 ## Script Index
 
-- [docker-container-clean](#docker-image-clean.sh)
-- [docker-image-clean](#docker-image-clean.sh)
-- [ffmpeg_installer](#ffmpeg_installer.sh)
+- [docker-container-clean](#docker-container-clean)
+- [docker-image-clean](#docker-image-clean)
+- [ffmpeg_installer](#ffmpeg_installer)
 - [wttr](#wttr)
 
 ## docker-container-clean.sh

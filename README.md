@@ -43,8 +43,8 @@ TODO: adjust execute commands
 
 ## ffmpeg_installer.sh
 
-Install ffmpeg for CentOS 7.
-This is based on official procedure below.
+Install ffmpeg for CentOS 7.  
+This is based on official procedure below.  
 [CompilationGuide/Centos – FFmpeg](https://trac.ffmpeg.org/wiki/CompilationGuide/Centos)
 
 ## wttr

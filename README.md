@@ -17,6 +17,13 @@ Sample case. (Installed in your home directory)
 export PATH=$PATH:~/myscripts/bin
 ```
 
+## Script Index
+
+- [docker-container-clean](#docker-image-clean.sh)
+- [docker-image-clean](#docker-image-clean.sh)
+- [ffmpeg_installer](#ffmpeg_installer.sh)
+- [wttr](#wttr)
+
 ## docker-container-clean.sh
 
 Output commands for removing all containers.  

@@ -5,11 +5,37 @@
 # Author: Mizuki Urushida
 #
 
-# Requirements
+# [Requirements]
 #	youtube-dl
 #		https://rg3.github.io/youtube-dl/
 #	jq
 #		https://stedolan.github.io/jq/
+
+# [JSON Structure]
+# {
+#   "item_type": 0,
+#   "item_id": "1487185333",
+#   "description": "",
+#   "item_data": {
+#     "video_id": "sm30645619",
+#     "title": "超やりこみゼノギアスざっくり解説まとめ",
+#     "thumbnail_url": "http://tn-skr4.smilevideo.jp/smile?i=30645619",
+#     "first_retrieve": 1487192400,
+#     "update_time": 1495899239,
+#     "view_counter": "57358",
+#     "mylist_counter": "1518",
+#     "num_res": "697",
+#     "group_type": "default",
+#     "length_seconds": "3365",
+#     "deleted": "0",
+#     "last_res_body": "TAS製作みたいなもん これビリーのとこの孤 同社オマージュネタか 塵 チートキャラ設定すぎ へぇー こっからいらすとや登 解説神shu3 このころはまだ声に覇 うぽつ 会社の飲み会かよ まあ
+# 、集中すれば天.. ",
+#     "watch_id": "sm30645619"
+#   },
+#   "watch": 0,
+#   "create_time": 1487202531,
+#   "update_time": 1487202531
+# }
 
 usage_exit() {
 		echo "Usage: $0 [-u] [-l] URL" 1>&2

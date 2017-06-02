@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#
+# 2017-06-02
+# Author: Mizuki Urushida
+#
+
+# Requirements
+#	youtube-dl
+#		https://rg3.github.io/youtube-dl/
+#	jq
+#		https://stedolan.github.io/jq/
+
+usage_exit() {
+		echo "Usage: $0 [-u] [-d] URL" 1>&2
+		exit 1
+}
+
+while getopts "u:d" OPT
+do
+	case $OPT in
+		u)	# NicoNico Username
+			username=${OPTARG}
+			;;
+		d)	# Dryrun
+			FLAG_D=1
+			;;
+		\?)	usage_exit
+			;;
+	esac
+done
+shift $((OPTIND - 1))
+
+# extract mylist's ID
+mylist_id=${1##*/}
+mylist_base_url="http://www.nicovideo.jp/mylist"
+
+# dry-run
+if [[ ! -z $FLAG_D ]]; then
+	wget -q ${mylist_base_url}/${mylist_id} -O - | grep "Mylist.preload" | perl -pe "s/\s*Mylist\.preload\([0-9]*,\s(.*)\);/\1/" | jq -c ".[] | .item_data | {title: .title, url: .video_id}"
+	exit 0
+fi
+
+# when $username is not specified even though don't dry-run
+if [[ -z ${username} && -z $FLAG_D ]]; then
+	echo Require username for downloading
+	exit 1
+fi
+
+youtube-dl -u ${username} `wget -q ${mylist_base_url}/${mylist_id} -O - | grep "Mylist.preload" | perl -pe "s/\s*Mylist\.preload\([0-9]*,\s(.*)\);/\1/" | jq -r  '.[] | .item_data | .video_id = "http://www.nicovideo.jp/watch/" + .video_id | .video_id' | tr "\n" " "`

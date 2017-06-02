@@ -12,18 +12,18 @@
 #		https://stedolan.github.io/jq/
 
 usage_exit() {
-		echo "Usage: $0 [-u] [-d] URL" 1>&2
+		echo "Usage: $0 [-u] [-l] URL" 1>&2
 		exit 1
 }
 
-while getopts "u:d" OPT
+while getopts "u:l" OPT
 do
 	case $OPT in
 		u)	# NicoNico Username
 			username=${OPTARG}
 			;;
-		d)	# Dryrun
-			FLAG_D=1
+		l)	# List
+			FLAG_L=1
 			;;
 		\?)	usage_exit
 			;;
@@ -31,18 +31,23 @@ do
 done
 shift $((OPTIND - 1))
 
+if [[ -z $1 ]]; then
+	echo Require one mylist URL
+	exit 1
+fi
+
 # extract mylist's ID
 mylist_id=${1##*/}
 mylist_base_url="http://www.nicovideo.jp/mylist"
 
-# dry-run
-if [[ ! -z $FLAG_D ]]; then
-	wget -q ${mylist_base_url}/${mylist_id} -O - | grep "Mylist.preload" | perl -pe "s/\s*Mylist\.preload\([0-9]*,\s(.*)\);/\1/" | jq -c ".[] | .item_data | {title: .title, url: .video_id}"
+# list mylist elements
+if [[ ! -z $FLAG_L ]]; then
+	wget -q ${mylist_base_url}/${mylist_id} -O - | grep "Mylist.preload" | perl -pe "s/\s*Mylist\.preload\([0-9]*,\s(.*)\);/\1/" | jq -c '.[] | .item_data | .video_id = "http://www.nicovideo.jp/watch/" + .video_id | {title: .title, url: .video_id}'
 	exit 0
 fi
 
-# when $username is not specified even though don't dry-run
-if [[ -z ${username} && -z $FLAG_D ]]; then
+# when $username is not specified even though don't list
+if [[ -z ${username} && -z $FLAG_L ]]; then
 	echo Require username for downloading
 	exit 1
 fi

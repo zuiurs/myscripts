@@ -1,0 +1,71 @@
+#!/bin/bash
+
+#### User Variables ####
+hostname="isucon5-image"
+os_path="http://ftp.riken.jp/Linux/centos/7/os/x86_64/"
+addr="192.168.36.140/16"
+gw="192.168.1.2"
+dns="192.168.1.2"
+pass=$(openssl passwd -1 "test")
+vcpu=1
+memory=4096 # in MiB
+size=20 # in GiB
+########################
+
+domain=$(echo $(hostname) | cut -d. -f2-)
+fqdn=${hostname}.${domain}
+
+if [[ ! -d /root/ks ]]; then
+	mkdir /root/ks
+fi
+
+if [[ -e /root/ks/${fqdn}.ks ]]; then
+	echo "The machine name is already used"
+	exit 1
+fi
+
+# purposely expand shell variables ('_EOF_' -> _EOF_)
+cat << _EOF_ > /root/ks/${fqdn}.ks
+install
+lang en_US.UTF-8
+keyboard jp106
+#network --device=eth0 --bootproto static --ip ${addr%/*} --netmask $(ipcalc -m ${addr} | cut -d= -f2) --gateway ${gw} --nameserver ${dns} --hostname ${fqdn}
+network --bootproto=dhcp --device=eth0
+rootpw --iscrypted ${pass}
+firewall --service=ssh
+authconfig --enableshadow --passalgo=sha512 --enablefingerprint
+selinux --disabled
+timezone Asia/Tokyo
+
+# disk
+zerombr
+clearpart --all --initlabel
+part /boot --size=1024 --asprimary
+part swap --size=${memory}
+part / --size=1 --grow
+bootloader --location=mbr
+
+reboot
+
+%packages
+@base
+@development
+%end
+_EOF_
+
+virt-install \
+--connect qemu:///system \
+--name ${fqdn} \
+--vcpus ${vcpu} \
+--memory ${memory} \
+--disk path=/var/kvm/disk/${fqdn}.img,size=${size} \
+--os-type linux \
+--os-variant virtio26 \
+--accelerate \
+--network bridge=br0 \
+--hvm \
+--location ${os_path} \
+--initrd-inject /root/ks/${fqdn}.ks \
+--nographics \
+--extra-args "ks=file:/${fqdn}.ks console=ttyS0,38400"
+

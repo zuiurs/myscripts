@@ -1,19 +1,92 @@
 #!/bin/bash
 
-#### User Variables ####
-hostname="isucon5-image"
+#
+# 2017-10-25
+# Author: Mizuki Urushida
+#
+
+# Checked OS
+#	CentOS 7.4
+#
+
+#### Default Variables ####
+hostname="example"
 os_path="http://ftp.riken.jp/Linux/centos/7/os/x86_64/"
-addr="192.168.36.140/16"
+addr="192.168.36.100"
 gw="192.168.1.2"
 dns="192.168.1.2"
 pass=$(openssl passwd -1 "test")
 vcpu=1
 memory=4096 # in MiB
 size=20 # in GiB
-########################
+##########################
+
+usage_exit() {
+	echo "Usage: $0 [-h hostname] [-s os_source] [-a cidr] [-g gateway] [-d dns] [-p] [-C vcpu_num] [-M ram_size] [-S disk_size]" 1>&2
+	exit 1
+}
+
+while getopts "h:s:a:g:d:pC:M:S:" OPT; do
+	case $OPT in
+		h)	# Hostname (e.g. test-vm.urushida.com)
+			hostname=${OPTARG}
+			;;
+		s)	# OS Source URL (e.g. http://ftp.riken.jp/Linux/centos/7/os/x86_64)
+			os_path=${OPTARG}
+			;;
+		a)	# Host CIDR (e.g. 192.168.0.2/24)
+			addr=${OPTARG}
+			;;
+		g)	# Gateway IP (e.g. 192.168.0.1)
+			gw=${OPTARG}
+			;;
+		d)	# DNS Server IP (e.g. 192.168.0.1)
+			dns=${OPTARG}
+			;;
+		p)	# Ask me Password
+			read -sp "Enter Host's Password: " _p1
+			tty -s && echo
+			read -sp "Verify Password: " _p2
+			tty -s && echo
+			if [[ ${_p1} == ${_p2} ]]; then
+				pass=$(openssl passwd -1 ${_p1})
+			else
+				echo "Password doesn't match"
+				exit 1
+			fi
+			;;
+		C)	# number of vCPU
+			vcpu=${OPTARG}
+			;;
+		M)	# size of Memory
+			memory=${OPTARG}
+			;;
+		S)	# size of Persistent Disk
+			size=${OPTARG}
+			;;
+		\?)	usage_exit
+			;;
+	esac
+done
+shift $((OPTIND - 1))
 
 domain=$(echo $(hostname) | cut -d. -f2-)
 fqdn=${hostname}.${domain}
+
+### Debug Code
+#echo ${hostname}
+#echo ${os_path}
+#echo ${addr}
+#echo ${gw}
+#echo ${dns}
+#echo ${pass}
+#echo ${vcpu}
+#echo ${memory}
+#echo ${size}
+#echo ${domain}
+#echo ${fqdn}
+#exit 0
+###
 
 if [[ ! -d /root/ks ]]; then
 	mkdir /root/ks

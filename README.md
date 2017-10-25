@@ -175,3 +175,16 @@ $ wttr tokyo
 - -m option
 	- Display moon
 	- like http://wttr.in/moon
+
+## virsh-machine
+
+Generate kickstart file and execute virt-install command.
+
+```
+./virsh-machine [-h hostname] [-s os_source] [-a cidr] [-g gateway] [-d dns] [-p] [-C vcpu_num] [-M ram_size] [-S disk_size]
+```
+
+- TODO
+  - correspond Preseed
+  - rename decent script name
+  - make -h option required

@@ -38,7 +38,7 @@
 # }
 
 usage_exit() {
-		echo "Usage: $0 [-u] [-l] URL" 1>&2
+		echo "Usage: $0 [-u username] [-l] URL" 1>&2
 		exit 1
 }
 

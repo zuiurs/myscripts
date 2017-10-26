@@ -12,9 +12,6 @@
 #### Default Variables ####
 hostname="example"
 os_path="http://ftp.riken.jp/Linux/centos/7/os/x86_64/"
-addr="192.168.36.100"
-gw="192.168.1.2"
-dns="192.168.1.2"
 pass=$(openssl passwd -1 "test")
 vcpu=1
 memory=4096 # in MiB
@@ -28,7 +25,7 @@ usage_exit() {
 
 while getopts "h:s:a:g:d:pC:M:S:" OPT; do
 	case $OPT in
-		h)	# Hostname (e.g. test-vm.urushida.com)
+		h)	# Hostname (e.g. test-vm)
 			hostname=${OPTARG}
 			;;
 		s)	# OS Source URL (e.g. http://ftp.riken.jp/Linux/centos/7/os/x86_64)
@@ -97,13 +94,19 @@ if [[ -e /root/ks/${fqdn}.ks ]]; then
 	exit 1
 fi
 
+# decide static ip or dhcp
+if [[ -z "${addr}" ]]; then
+	network_option="--bootproto dhcp"
+else
+	network_option="--bootproto static --ip ${addr%/*} --netmask $(ipcalc -m ${addr} | cut -d= -f2) --gateway ${gw} --nameserver ${dns}"
+fi
+
 # purposely expand shell variables ('_EOF_' -> _EOF_)
 cat << _EOF_ > /root/ks/${fqdn}.ks
 install
 lang en_US.UTF-8
 keyboard jp106
-#network --device=eth0 --bootproto static --ip ${addr%/*} --netmask $(ipcalc -m ${addr} | cut -d= -f2) --gateway ${gw} --nameserver ${dns} --hostname ${fqdn}
-network --bootproto=dhcp --device=eth0
+network --device eth0 --hostname ${fqdn} ${network_option} 
 rootpw --iscrypted ${pass}
 firewall --service=ssh
 authconfig --enableshadow --passalgo=sha512 --enablefingerprint

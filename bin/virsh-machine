@@ -10,7 +10,16 @@
 #
 
 #### Default Variables ####
-hostname="example"
+if type go >/dev/null 2>&1; then
+	if ! type names-generator >/dev/null 2>&1; then
+		go get -u github.com/moby/moby/pkg/namesgenerator/cmd/names-generator
+	fi
+	# e.g.) lucid_mirzakhani -> lucid-mirzakhani
+	hostname=$(names-generator | tr _ -)
+else
+	hostname="example"
+fi
+
 os_path="http://ftp.riken.jp/Linux/centos/7/os/x86_64/"
 pass=$(openssl passwd -1 "test")
 vcpu=1
@@ -71,25 +80,25 @@ domain=$(echo $(hostname) | cut -d. -f2-)
 fqdn=${hostname}.${domain}
 
 ### Debug Code
-#echo ${hostname}
-#echo ${os_path}
-#echo ${addr}
-#echo ${gw}
-#echo ${dns}
-#echo ${pass}
-#echo ${vcpu}
-#echo ${memory}
-#echo ${size}
-#echo ${domain}
-#echo ${fqdn}
+#echo hostname=${hostname}
+#echo os_path=${os_path}
+#echo addr=${addr}
+#echo gw=${gw}
+#echo dns=${dns}
+#echo pass=${pass}
+#echo vcpu=${vcpu}
+#echo memory=${memory}
+#echo size=${size}
+#echo domain=${domain}
+#echo fqdn=${fqdn}
 #exit 0
 ###
 
-if [[ ! -d /root/ks ]]; then
-	mkdir /root/ks
+if [[ ! -d $HOME/ks ]]; then
+	mkdir $HOME/ks
 fi
 
-if [[ -e /root/ks/${fqdn}.ks ]]; then
+if [[ -e $HOME/ks/${fqdn}.ks ]]; then
 	echo "The machine name is already used"
 	exit 1
 fi
@@ -102,7 +111,7 @@ else
 fi
 
 # purposely expand shell variables ('_EOF_' -> _EOF_)
-cat << _EOF_ > /root/ks/${fqdn}.ks
+cat << _EOF_ > $HOME/ks/${fqdn}.ks
 install
 lang en_US.UTF-8
 keyboard jp106
@@ -129,7 +138,7 @@ reboot
 %end
 _EOF_
 
-virt-install \
+sudo virt-install \
 --connect qemu:///system \
 --name ${fqdn} \
 --vcpus ${vcpu} \
@@ -141,7 +150,7 @@ virt-install \
 --network bridge=br0 \
 --hvm \
 --location ${os_path} \
---initrd-inject /root/ks/${fqdn}.ks \
+--initrd-inject $HOME/ks/${fqdn}.ks \
 --nographics \
 --extra-args "ks=file:/${fqdn}.ks console=ttyS0,38400"
 

@@ -188,3 +188,43 @@ Generate kickstart file and execute virt-install command.
   - correspond Preseed
   - rename decent script name
   - make -h option required
+
+## tmuxseq
+
+Generate and Separate tmux pane by character sequence. This won't generate tmux session if you are in tmux. (Separete Only)
+
+```
+$ tmuxseq /-
+
++-------+-------+
+|       |       |
+|       |       |
+|       +-------+
+|       |       |
+|       |       |
++-------+-------+
+
+$ tmuxseq -k/
+
++-------+-------+
+|       |       |
+|       |       |
++-------+-------+
+|               |
+|               |
++---------------+
+
+$ tmuxseq +
+
++-------+-------+
+|       |       |
+|       |       |
++-------+-------+
+|       |       |
+|       |       |
++-------+-------+
+```
+
+- Tips 
+  - After horizontal split, pane scope points to right pane.
+  - After vertical split, pane scope points to under pane.

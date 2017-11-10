@@ -7,39 +7,35 @@
 
 usage_exit() {
 	echo "Usage: $0 [-s] sequence" 1>&2
-	echo "\tsequence: -, /, h, j, k, l"
-	echo "\t-s: Synchronize pane"
+	echo "	sequence: -, /, +, h, j, k, l" 1>&2
 	exit 1
 }
 
-while getopts "s" OPT; do
-	case $OPT in
-		s)	# Synchronize pane
-			FLAG_S="TRUE"
-			;;
-		\?)	usage_exit ;;
-	esac
-done
-shift $((OPTIND - 1))
+seq_process() {
+	for i in $(echo $1 | fold -w1); do
+		case $i in
+			"-") tmux split-window -v ;;
+			"/") tmux split-window -h ;;
+			"h") tmux select-pane -L ;;
+			"j") tmux select-pane -D ;;
+			"k") tmux select-pane -U ;;
+			"l") tmux select-pane -R ;;
+			"+") seq_process -/k/j ;;
+			\?)	echo Invalid argument 
+				usage_exit ;;
+		esac
+	done
+}
 
 seq=$1
 session=$(date +%s)
 
-tmux new-session -d -s ${session}
-for i in $(echo ${seq} | fold -w1); do
-	case $i in
-		"-") tmux split-window -v ;;
-		"/") tmux split-window -h ;;
-		"h") tmux select-pane -L ;;
-		"j") tmux select-pane -D ;;
-		"k") tmux select-pane -U ;;
-		"l") tmux select-pane -R ;;
-		\?) echo Invalid argument ;;
-	esac
-done
-
-if [[ $FLAG_S == "TRUE" ]]; then
-	tmux set-window-option synchronize-panes on
+if [[ -z ${TMUX} ]]; then
+	tmux new-session -d -s ${session}
 fi
 
-tmux attach-session -t ${session}
+seq_process ${seq}
+
+if [[ -z ${TMUX} ]]; then
+	tmux attach-session -t ${session}
+fi

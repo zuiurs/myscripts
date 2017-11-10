@@ -23,6 +23,9 @@ export PATH=$PATH:~/myscripts/bin
 - [docker-image-clean](#docker-image-clean)
 - [ffmpeg_installer](#ffmpeg_installer)
 - [wttr](#wttr)
+- [nico-mylist-downloader](#nico-mylist-downloader)
+- [virsh-machine](#virsh-machine)
+- [tmuxseq](#tmuxseq)
 
 ## docker-container-clean
 
@@ -175,6 +178,12 @@ $ wttr tokyo
 - -m option
 	- Display moon
 	- like http://wttr.in/moon
+
+## nico-mylist-downloader
+
+NicoNico's mylist parser and downloader.
+
+**Deprecated**: youtube-dl is more good.
 
 ## virsh-machine
 

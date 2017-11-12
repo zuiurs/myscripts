@@ -1,0 +1,7 @@
+#!/bin/bash
+
+TARGET=/var/www/html
+
+chown -R nginx: "${TARGET}"
+chmod -R a=,u=rwX "${TARGET}"
+

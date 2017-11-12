@@ -26,6 +26,7 @@ export PATH=$PATH:~/myscripts/bin
 - [nico-mylist-downloader](#nico-mylist-downloader)
 - [virsh-machine](#virsh-machine)
 - [tmuxseq](#tmuxseq)
+- [update-permission](#update-permission)
 
 ## docker-container-clean
 
@@ -237,3 +238,9 @@ $ tmuxseq +
 - Tips 
   - After horizontal split, pane scope points to right pane.
   - After vertical split, pane scope points to under pane.
+
+## update-permission
+
+Update all path under `${TARGET}` to `nginx:nginx` , `600` (if directory `700` ).
+
+

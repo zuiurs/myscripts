@@ -20,7 +20,8 @@ else
 	hostname="example"
 fi
 
-os_path="http://ftp.riken.jp/Linux/centos/7/os/x86_64/"
+os_path_c="http://ftp.riken.jp/Linux/centos/7/os/x86_64/"
+os_path_f="http://ftp.riken.jp/Linux/fedora/releases/26/Server/x86_64/os/"
 pass=$(openssl passwd -1 "test")
 vcpu=1
 memory=4096 # in MiB
@@ -28,27 +29,30 @@ size=20 # in GiB
 ##########################
 
 usage_exit() {
-	echo "Usage: $0 [-h hostname] [-s os_source] [-a cidr] [-g gateway] [-d dns] [-p] [-C vcpu_num] [-M ram_size] [-S disk_size]" 1>&2
+	echo "Usage: $0 [-h hostname] [-s os_source] [-t type] [-a cidr] [-g gateway] [-d dns] [-p] [-C vcpu_num] [-M ram_size] [-S disk_size]" 1>&2
 	exit 1
 }
 
-while getopts "h:s:a:g:d:pC:M:S:" OPT; do
+while getopts "h:s:t:a:g:d:pC:M:S:" OPT; do
 	case $OPT in
 		h)	# Hostname (e.g. test-vm)
-			hostname=${OPTARG}
-			;;
+			hostname=${OPTARG} ;;
 		s)	# OS Source URL (e.g. http://ftp.riken.jp/Linux/centos/7/os/x86_64)
-			os_path=${OPTARG}
-			;;
+			os_path=${OPTARG} ;;
+		t)	# OS Type (e.g. c[entos], f[edora])
+			if [[ "${OPTARG}" =~ ^(f|fedora|c|centos)$ ]]; then
+				os_type=${OPTARG}
+			else
+				echo Invalid type 1>&2
+				echo Supported type: f, fedora, c, centos 1>&2
+				exit 1
+			fi ;;
 		a)	# Host CIDR (e.g. 192.168.0.2/24)
-			addr=${OPTARG}
-			;;
+			addr=${OPTARG} ;;
 		g)	# Gateway IP (e.g. 192.168.0.1)
-			gw=${OPTARG}
-			;;
+			gw=${OPTARG} ;;
 		d)	# DNS Server IP (e.g. 192.168.0.1)
-			dns=${OPTARG}
-			;;
+			dns=${OPTARG} ;;
 		p)	# Ask me Password
 			read -sp "Enter Host's Password: " _p1
 			tty -s && echo
@@ -59,19 +63,14 @@ while getopts "h:s:a:g:d:pC:M:S:" OPT; do
 			else
 				echo "Password doesn't match"
 				exit 1
-			fi
-			;;
+			fi ;;
 		C)	# number of vCPU
-			vcpu=${OPTARG}
-			;;
+			vcpu=${OPTARG} ;;
 		M)	# size of Memory
-			memory=${OPTARG}
-			;;
+			memory=${OPTARG} ;;
 		S)	# size of Persistent Disk
-			size=${OPTARG}
-			;;
-		\?)	usage_exit
-			;;
+			size=${OPTARG} ;;
+		\?)	usage_exit ;;
 	esac
 done
 shift $((OPTIND - 1))
@@ -94,6 +93,24 @@ fqdn=${hostname}.${domain}
 #exit 0
 ###
 
+if [[ -z "${os_path}" ]]; then
+	# If not defined both parameters
+	if [[ -z "${os_type}" ]]; then
+		os_path=${os_path_c}
+		os_type="centos"
+	elif [[ "${os_type}" =~ ^(f|fedora)$ ]]; then
+		os_path=${os_path_f}
+	else 
+		os_path=${os_path_c}
+	fi
+else 
+	# If OS Source is defined by user, OS Type is required.
+	if [[ -z "${os_type}" ]]; then
+		echo OS type is required 2>&1
+		exit 1
+	fi
+fi
+
 if [[ ! -d $HOME/ks ]]; then
 	mkdir $HOME/ks
 fi
@@ -110,8 +127,35 @@ else
 	network_option="--bootproto static --ip ${addr%/*} --netmask $(ipcalc -m ${addr} | cut -d= -f2) --gateway ${gw} --nameserver ${dns}"
 fi
 
-# purposely expand shell variables ('_EOF_' -> _EOF_)
-cat << _EOF_ > $HOME/ks/${fqdn}.ks
+if [[ "${os_type}" =~ ^(f|fedora)$ ]]; then
+	cat << _EOF_ > $HOME/ks/${fqdn}.ks
+install
+lang en_US.UTF-8
+keyboard jp106
+network --device ens3 --hostname ${fqdn} ${network_option} 
+rootpw --iscrypted ${pass}
+firewall --service=ssh
+authconfig --enableshadow --passalgo=sha512 --enablefingerprint
+selinux --disabled
+timezone Asia/Tokyo
+
+# disk
+zerombr
+clearpart --all --initlabel
+part /boot --size=1024 --asprimary
+part swap --size=${memory}
+part / --size=1 --grow
+bootloader --location=mbr
+
+reboot
+
+%packages
+@^server-product-environment
+%end
+_EOF_
+else
+	# purposely expand shell variables ('_EOF_' -> _EOF_)
+	cat << _EOF_ > $HOME/ks/${fqdn}.ks
 install
 lang en_US.UTF-8
 keyboard jp106
@@ -137,6 +181,7 @@ reboot
 @development
 %end
 _EOF_
+fi
 
 sudo virt-install \
 --connect qemu:///system \

@@ -48,7 +48,12 @@ while getopts "h:s:t:a:g:d:pC:M:S:" OPT; do
 				exit 1
 			fi ;;
 		a)	# Host CIDR (e.g. 192.168.0.2/24)
-			addr=${OPTARG} ;;
+			if [[ ${OPTARG} =~ ^.*/.*$ ]]; then
+				addr=${OPTARG}
+			else
+				echo "Maybe this is not CIDR: ${OPTARG}" 1>&2
+				exit 1
+			fi ;;
 		g)	# Gateway IP (e.g. 192.168.0.1)
 			gw=${OPTARG} ;;
 		d)	# DNS Server IP (e.g. 192.168.0.1)
